@@ -11,10 +11,6 @@
         $scope.user = null;
         $scope.allUsers = [];
 
-        
-
-        //$scope.initController();
-
         var loadCurrentUser = function() {
             var name= $rootScope.globals.currentUser ?  $rootScope.globals.currentUser.username : '';
             UserService.GetByUsername(name)
