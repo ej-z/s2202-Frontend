@@ -5,36 +5,34 @@
         .module('app')
         .controller('HomeController', HomeController);
 
-    HomeController.$inject = ['UserService', '$rootScope'];
-    function HomeController(UserService, $rootScope) {
-        var vm = this;
+    HomeController.$inject = ['$scope','UserService', '$rootScope'];
+    function HomeController($scope,UserService, $rootScope) {
 
-        vm.user = null;
-        vm.allUsers = [];
-        vm.deleteUser = deleteUser;
+        $scope.user = null;
+        $scope.allUsers = [];
 
-        initController();
+        
 
-        function initController() {
-            loadCurrentUser();
-            loadAllUsers();
-        }
+        //$scope.initController();
 
-        function loadCurrentUser() {
-            UserService.GetByUsername($rootScope.globals.currentUser.username)
+        var loadCurrentUser = function() {
+            var name= $rootScope.globals.currentUser ?  $rootScope.globals.currentUser.username : '';
+            UserService.GetByUsername(name)
                 .then(function (user) {
-                    vm.user = user;
+                    $scope.user = user;
                 });
         }
 
-        function loadAllUsers() {
+        var loadAllUsers = function() {
             UserService.GetAll()
                 .then(function (users) {
-                    vm.allUsers = users;
+                    $scope.allUsers = users;
                 });
         }
+        loadCurrentUser();
+        loadAllUsers();
 
-        function deleteUser(id) {
+        $scope.deleteUser = function(id) {
             UserService.Delete(id)
             .then(function () {
                 loadAllUsers();

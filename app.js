@@ -2,50 +2,52 @@
     'use strict';
 
     angular
-        .module('app', ['ngRoute', 'ngCookies'])
+        .module('app', ['ui.router', 'ngCookies'])
         .config(config)
         .run(run);
 
-    config.$inject = ['$routeProvider', '$locationProvider'];
-    function config($routeProvider, $locationProvider) {
-        $routeProvider
-            .when('/', {
+    config.$inject = ['$stateProvider', '$urlRouterProvider'];
+    function config($stateProvider, $urlRouterProvider) {
+
+        $urlRouterProvider.otherwise('/');
+
+        $stateProvider
+
+            .state('/', {
+                url:'/',
                 controller: 'HomeController',
-                templateUrl: 'home/home.view.html',
-                controllerAs: 'vm'
+                templateUrl: 'home/home.view.html'
             })
 
-            .when('/login', {
+            .state('login', {
+                url:'/login',
                 controller: 'LoginController',
-                templateUrl: 'login/login.view.html',
-                controllerAs: 'vm'
+                templateUrl: 'login/login.view.html'
             })
 
-            .when('/register', {
+            .state('register', {
+                url:'/register',
                 controller: 'RegisterController',
-                templateUrl: 'register/register.view.html',
-                controllerAs: 'vm'
-            })
-
-            .otherwise({ redirectTo: '/login' });
+                templateUrl: 'register/register.view.html'
+            });
     }
 
-    run.$inject = ['$rootScope', '$location', '$cookieStore', '$http'];
-    function run($rootScope, $location, $cookieStore, $http) {
+    run.$inject = ['$rootScope', '$cookieStore', '$http'];
+    function run($rootScope, $cookieStore, $http) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
         }
 
-        $rootScope.$on('$locationChangeStart', function (event, next, current) {
-            // redirect to login page if not logged in and trying to access a restricted page
-            var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
-            var loggedIn = $rootScope.globals.currentUser;
-            if (restrictedPage && !loggedIn) {
-                $location.path('/login');
-            }
-        });
+        // $rootScope.$on('$locationChangeStart', function (event, next, current) {
+        //     // redirect to login page if not logged in and trying to access a restricted page
+        //     var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
+        //     var loggedIn = $rootScope.globals.currentUser;
+        //     if (restrictedPage && !loggedIn) {
+        //         $location.path('/login');
+        //     }
+        // });
 
         $rootScope.IsLoggedin = function(){
             var loggedIn = $rootScope.globals.currentUser;
@@ -59,6 +61,7 @@
             $cookieStore.remove('globals');
             $http.defaults.headers.common.Authorization = 'Basic';
         };
+        
     }
 
 })();

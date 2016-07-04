@@ -5,40 +5,37 @@
         .module('app')
         .controller('RegisterController', RegisterController);
 
-    RegisterController.$inject = ['UserService', '$location', '$rootScope', 'FlashService'];
-    function RegisterController(UserService, $location, $rootScope, FlashService) {
-        var vm = this;
+    RegisterController.$inject = ['$scope','$state','UserService', '$rootScope', 'FlashService'];
+    function RegisterController($scope,$state, UserService, $rootScope, FlashService) {
 
-        vm.register = register;
-        vm.AvailableApartments = UserService.GetAvailableApartments("");
-        vm.getFlatsForApartment = getFlatsForApartment;
-        vm.isFlatSelectionDisabled = true;
+        $scope.AvailableApartments = UserService.GetAvailableApartments("");
+        $scope.isFlatSelectionDisabled = true;
 
-        function getFlatsForApartment() {
-            if(vm.user.apartmentName != null){
-                vm.AvailableFlats = UserService.GetAvailableFlats(vm.user.apartmentName,"");
-                vm.isFlatSelectionDisabled = false;
+        $scope.getFlatsForApartment = function() {
+            if($scope.user.apartmentName != null){
+                $scope.AvailableFlats = UserService.GetAvailableFlats($scope.user.apartmentName,"");
+                $scope.isFlatSelectionDisabled = false;
             }
             else {
-                 vm.isFlatSelectionDisabled = true;
+                 $scope.isFlatSelectionDisabled = true;
             }
            };
 
-        function register() {
-            if(vm.user.password != vm.reenterpassword)
+        $scope.register = function() {
+            if($scope.user.password != $scope.reenterpassword)
             {
                 FlashService.Error("Passwords do not match");
                 return;
             }
-            vm.dataLoading = true;
-            UserService.Create(vm.user)
+            $scope.dataLoading = true;
+            UserService.Create($scope.user)
                 .then(function (response) {
                     if (response.success) {
                         FlashService.Success('Registration successful', true);
-                        $location.path('/login');
+                        $state.go('login')
                     } else {
                         FlashService.Error(response.message);
-                        vm.dataLoading = false;
+                        $scope.dataLoading = false;
                     }
                 });
         }
