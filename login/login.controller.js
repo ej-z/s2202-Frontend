@@ -20,12 +20,16 @@
             AuthenticationService.Login($scope.username, $scope.password, function (response) {
                 if (response.success) {
                     AuthenticationService.SetCredentials($scope.username, $scope.password);
-                    $state.go('/');
+                    $state.go('login.manage',{userid:$scope.username});
                 } else {
                     FlashService.Error(response.message);
                     $scope.dataLoading = false;
                 }
             });
+        };
+
+        $scope.cancel = function(){
+            $state.go('/');
         };
     }
 

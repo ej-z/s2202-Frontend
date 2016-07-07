@@ -38,7 +38,12 @@
                         $scope.dataLoading = false;
                     }
                 });
-        }
+        };
+
+        
+        $scope.cancel = function(){
+            $state.go('/');
+        };
     }
 
 })();

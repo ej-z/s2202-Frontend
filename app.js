@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router', 'ngCookies'])
+        .module('app', ['ui.router', 'ngCookies','ngAnimate', 'ui.bootstrap'])
         .config(config)
         .run(run);
 
@@ -20,34 +20,62 @@
             })
 
             .state('login', {
-                url:'/login',
-                controller: 'LoginController',
-                templateUrl: 'login/login.view.html'
+                url:'/',
+                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                    $modal.open({
+                        controller: 'LoginController',
+                        templateUrl: 'login/login.view.html',
+                        backdrop: 'static'          
+                    }).result.finally(function(data) {
+                        $state.go('^');
+                    });
+                }]
+                
             })
 
             .state('register', {
-                url:'/register',
-                controller: 'RegisterController',
-                templateUrl: 'register/register.view.html'
+                url:'/',
+                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                    $modal.open({
+                        controller: 'RegisterController',
+                        templateUrl: 'register/register.view.html',
+                        backdrop: 'static'          
+                    }).result.finally(function() {
+                        $state.go('^');
+                    });
+                }]                
+            })
+
+            .state('login.manage', {
+                url:'/',                
+                onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
+                    $modal.open({
+                        controller: 'ManageController',
+                        templateUrl: 'login/manage.view.html',
+                        params:['userid'],
+                        backdrop: 'static'          
+                    }).result.finally(function(data) {
+                        $state.go('^');
+                    });
+                }]
+                
             });
     }
 
-    run.$inject = ['$rootScope', '$cookieStore', '$http'];
-    function run($rootScope, $cookieStore, $http) {
+    run.$inject = ['$rootScope', '$cookieStore', '$http','$modalStack'];
+    function run($rootScope, $cookieStore, $http,$modalStack) {
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
         if ($rootScope.globals.currentUser) {
             $http.defaults.headers.common['Authorization'] = 'Basic ' + $rootScope.globals.currentUser.authdata; // jshint ignore:line
         }
 
-        // $rootScope.$on('$locationChangeStart', function (event, next, current) {
-        //     // redirect to login page if not logged in and trying to access a restricted page
-        //     var restrictedPage = $.inArray($location.path(), ['/login', '/register']) === -1;
-        //     var loggedIn = $rootScope.globals.currentUser;
-        //     if (restrictedPage && !loggedIn) {
-        //         $location.path('/login');
-        //     }
-        // });
+        $rootScope.$on('$stateChangeStart', function() {
+          var top = $modalStack.getTop();
+          if (top) {
+            $modalStack.dismiss(top.key);
+          }
+      })
 
         $rootScope.IsLoggedin = function(){
             var loggedIn = $rootScope.globals.currentUser;
