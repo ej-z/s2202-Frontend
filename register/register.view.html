@@ -6,17 +6,17 @@
     <form name="form" ng-submit="register()" role="form">
         <div class="form-group" ng-class="{ 'has-error': form.apartmentName.$dirty && form.apartmentName.$error.required }">
             <label for="apartmentName">Apartment Name</label>
-            <select name="apartmentName" id="apartmentName" class="form-control" ng-model="user.apartmentName"
+            <select name="apartmentName" id="apartmentName" class="form-control" ng-model="user.apartmentId"
              ng-change="getFlatsForApartment()" required >
-                 <option ng-repeat="apartment in AvailableApartments" value="{{apartment.Name}}">{{apartment.Name}}</option>
+                 <option ng-repeat="apartment in AvailableApartments" value="{{apartment.Id}}">{{apartment.Name}}</option>
             </select>
             <span ng-show="form.apartmentName.$dirty && form.apartmentName.$error.required" class="help-block">Apartment Name is required</span>
         </div>
         <div class="form-group" ng-class="{ 'has-error': form.flatName.$dirty && form.flatName.$error.required }">
             <label for="flatName">Flat Name</label>
-            <select name="flatName" id="flatName" class="form-control" ng-model="user.flatName" 
+            <select name="flatName" id="flatName" class="form-control" ng-model="user.flatId" 
             ng-disabled="isFlatSelectionDisabled" required >
-                 <option ng-repeat="flatName in AvailableFlats" value="{{flatName.Name}}">{{flatName.Name}}</option>
+                 <option ng-repeat="flatName in AvailableFlats" value="{{flatName.Id}}">{{flatName.Name}}</option>
             </select>
             <span ng-show="form.flatName.$dirty && form.flatName.$error.required" class="help-block">Flat Name is required</span>
         </div>

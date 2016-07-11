@@ -25,7 +25,7 @@
                     $scope.allUsers = users;
                 });
         }
-        loadCurrentUser();
+        //loadCurrentUser();
         loadAllUsers();
 
         $scope.deleteUser = function(id) {

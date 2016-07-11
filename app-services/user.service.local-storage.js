@@ -5,8 +5,8 @@
         .module('app')
         .factory('UserService', UserService);
 
-    UserService.$inject = ['$timeout', '$filter', '$q'];
-    function UserService($timeout, $filter, $q) {
+    UserService.$inject = ['$timeout','$http', '$filter', '$q'];
+    function UserService($timeout,$http, $filter, $q) {
 
         var service = {};
 
@@ -16,30 +16,33 @@
         service.Create = Create;
         service.Update = Update;
         service.Delete = Delete;
-        service.GetAvailableApartments = GetAvailableApartments;
-        service.GetAvailableFlats = GetAvailableFlats;
+        service.GetAllAvailableApartments = GetAllAvailableApartments;
+        service.GetFlatsForApartment = GetFlatsForApartment;
 
         return service;
 
         function GetAll() {
-            var deferred = $q.defer();
-            deferred.resolve(getUsers());
-            return deferred.promise;
+            return getUsers();
         }
 
         function GetById(id) {
             var deferred = $q.defer();
-            var filtered = $filter('filter')(getUsers(), { id: id });
-            var user = filtered.length ? filtered[0] : null;
-            deferred.resolve(user);
+            getUsers().then(function(users){
+                var filtered = $filter('filter')(users, { id: id });
+                var user = filtered.length ? filtered[0] : null;
+                deferred.resolve(user);                
+            });
             return deferred.promise;
         }
 
         function GetByUsername(username) {
+
             var deferred = $q.defer();
-            var filtered = $filter('filter')(getUsers(), { username: username });
-            var user = filtered.length ? filtered[0] : null;
-            deferred.resolve(user);
+            getUsers().then(function(users){
+                var filtered = $filter('filter')(users, { username: username });
+                var user = filtered.length ? filtered[0] : null;
+                deferred.resolve(user);                
+            });
             return deferred.promise;
         }
 
@@ -107,23 +110,42 @@
         // private functions
 
         function getUsers() {
-            if(!localStorage.users){
-                localStorage.users = JSON.stringify([]);
-            }
-
-            return JSON.parse(localStorage.users);
+            return $http.get('/data/Users.json').then(handleSuccess, handleError('Error getting all users'));;
         }
 
         function setUsers(users) {
             localStorage.users = JSON.stringify(users);
         }
 
-        function GetAvailableApartments(searchPhrase) {
-        return [{Name:"Apartment1"},{Name:"Apartment2"},{Name:"Apartment3"}];
-    }
+        function GetAllAvailableApartments(searchPhrase) {
+            return $http.get('/data/Apartments.json').then(handleSuccess, handleError('Error getting all apartments'));
+        }
 
-        function GetAvailableFlats(apartmentId, searchPhrase) {
-        return [{Name:"s1"},{Name:"s2"},{Name:"s3"}];
-    }
+        function GetAllAvailableFlats(searchPhrase) {
+            return $http.get('/data/Flats.json').then(handleSuccess, handleError('Error getting all apartments'));
+        }
+
+        function GetAvailableApartmentsForUser(userId, searchPhrase) {
+        return [{Name:"Apartment1"},{Name:"Apartment2"},{Name:"Apartment3"}];
+        }
+
+        function GetFlatsForApartment(ApartmentId, searchPhrase) {
+            var deferred = $q.defer();
+            GetAllAvailableFlats().then(function(flats){
+                var filtered = $filter('filter')(flats, { ApartmentId: ApartmentId });
+                deferred.resolve(filtered);                
+            });
+            return deferred.promise;
+        }
+
+        function handleSuccess(res) {
+            return res.data;
+        }
+
+        function handleError(error) {
+            return function () {
+                return { success: false, message: error };
+            };
+        }
     }
 })();

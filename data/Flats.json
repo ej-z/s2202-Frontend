@@ -1,0 +1,14 @@
+[
+{"Id":1,"Name":"101","ApartmentId":3},
+{"Id":2,"Name":"102","ApartmentId":3},
+{"Id":3,"Name":"103","ApartmentId":3},
+{"Id":4,"Name":"104","ApartmentId":3},
+{"Id":5,"Name":"105","ApartmentId":3},
+{"Id":6,"Name":"A1","ApartmentId":2},
+{"Id":7,"Name":"A2","ApartmentId":2},
+{"Id":8,"Name":"A3","ApartmentId":2},
+{"Id":9,"Name":"S101","ApartmentId":1},
+{"Id":10,"Name":"S102","ApartmentId":1},
+{"Id":11,"Name":"S103","ApartmentId":1},
+{"Id":12,"Name":"S104","ApartmentId":1}
+]

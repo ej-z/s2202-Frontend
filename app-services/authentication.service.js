@@ -16,10 +16,6 @@
         return service;
 
         function Login(username, password, callback) {
-
-            /* Dummy authentication for testing, uses $timeout to simulate api call
-             ----------------------------------------------*/
-            $timeout(function () {
                 var response;
                 UserService.GetByUsername(username)
                     .then(function (user) {
@@ -30,7 +26,6 @@
                         }
                         callback(response);
                     });
-            }, 1000);
 
             /* Use this for real authentication
              ----------------------------------------------*/

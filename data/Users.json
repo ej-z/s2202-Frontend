@@ -1,0 +1,5 @@
+[
+{"id":1,"firstname":"Ejaz","lastname":"S","username":"ejaz","password":"pass","apartments":[1],"flats":[]},
+{"id":2,"firstname":"John","lastname":"Smith","username":"john","password":"pass","apartments":[],"flats":[1]},
+{"id":3,"firstname":"Frank","lastname":"Underwood","username":"frank","password":"pass","apartments":[],"flats":[3]}
+]

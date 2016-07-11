@@ -8,12 +8,17 @@
     RegisterController.$inject = ['$scope','$state','UserService', '$rootScope', 'FlashService'];
     function RegisterController($scope,$state, UserService, $rootScope, FlashService) {
 
-        $scope.AvailableApartments = UserService.GetAvailableApartments("");
+         
+        UserService.GetAllAvailableApartments("").then(function (apartments) {
+                    $scope.AvailableApartments = apartments;
+                });
         $scope.isFlatSelectionDisabled = true;
 
         $scope.getFlatsForApartment = function() {
-            if($scope.user.apartmentName != null){
-                $scope.AvailableFlats = UserService.GetAvailableFlats($scope.user.apartmentName,"");
+            if($scope.user.apartmentId != null){                 
+                UserService.GetFlatsForApartment($scope.user.apartmentId,"").then(function (flats) {
+                    $scope.AvailableFlats = flats;
+                });
                 $scope.isFlatSelectionDisabled = false;
             }
             else {
@@ -40,7 +45,7 @@
                 });
         };
 
-        
+
         $scope.cancel = function(){
             $state.go('/');
         };
