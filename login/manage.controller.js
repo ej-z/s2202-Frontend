@@ -5,27 +5,38 @@
         .module('app')
         .controller('ManageController', ManageController);
 
-    ManageController.$inject = ['$state','$scope', 'UserService', 'FlashService'];
-    function ManageController($state,$scope, UserService, FlashService) {
+    ManageController.$inject = ['$state','$scope','$stateParams', 'AuthenticationService'];
+    function ManageController($state,$scope,$stateParams, AuthenticationService) {
 
-        var getapartemnts = function() {
-            UserService.GetAvailableApartmentsForUser('ejaz','').then(function(apartments){
-                $scope.AvailableApartments = apartments;
-            })
-        };
+        $scope.ManageApartment = function(){
+            var username = $stateParams.username;
+            var authdata = $stateParams.authdata;
+            AuthenticationService.SetCredentials(username,authdata,1);
+            $state.go('apartment');
+        }
 
-        getapartemnts();
+        $scope.ManageFlat = function(){
+            AuthenticationService.SetCredentials($stateParams.username,$stateParams.authdata, 2);
+            $state.go('flat');
+        }
+        // var getapartemnts = function() {
+        //     UserService.GetAvailableApartmentsForUser('ejaz','').then(function(apartments){
+        //         $scope.AvailableApartments = apartments;
+        //     })
+        // };
+
+        // getapartemnts();
 
 
-        var getFlats = function() {
-            UserService.GetAvailableFlatsForUser('ejaz','').then(function(flats){
-                $scope.AvailableFlats = flats;
-            })
-        };
+        // var getFlats = function() {
+        //     UserService.GetAvailableFlatsForUser('ejaz','').then(function(flats){
+        //         $scope.AvailableFlats = flats;
+        //     })
+        // };
 
-        getFlats();
+        // getFlats();
 
-        $scope.manafeFlat = function(){
+        $scope.cancel = function(){
             $state.go('/');
         };
     }

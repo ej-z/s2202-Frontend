@@ -19,8 +19,9 @@
             $scope.dataLoading = true;
             AuthenticationService.Login($scope.username, $scope.password, function (response) {
                 if (response.success) {
-                    AuthenticationService.SetCredentials($scope.username, $scope.password);
-                    $state.go('login.manage',{userid:$scope.username});
+                    var authdata = AuthenticationService.GetAuthdata($scope.username, $scope.password);
+                    var params = {username:$scope.username, authdata:authdata};
+                    $state.go('login.manage',params);
                 } else {
                     FlashService.Error(response.message);
                     $scope.dataLoading = false;

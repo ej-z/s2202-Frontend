@@ -10,6 +10,7 @@
         var service = {};
 
         service.Login = Login;
+        service.GetAuthdata = GetAuthdata;
         service.SetCredentials = SetCredentials;
         service.ClearCredentials = ClearCredentials;
 
@@ -41,12 +42,15 @@
             ClearCredentials();
         }
 
-        function SetCredentials(username, password) {
-            var authdata = Base64.encode(username + ':' + password);
+        function GetAuthdata(username, password) {
+            return Base64.encode(username + ':' + password);
+        }
 
+        function SetCredentials(username, authdata, manage) {
             $rootScope.globals = {
                 currentUser: {
                     username: username,
+                    manage: manage,
                     authdata: authdata
                 }
             };

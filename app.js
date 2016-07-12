@@ -20,7 +20,6 @@
             })
 
             .state('login', {
-                url:'/',
                 onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
                     $modal.open({
                         controller: 'LoginController',
@@ -34,7 +33,6 @@
             })
 
             .state('register', {
-                url:'/',
                 onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
                     $modal.open({
                         controller: 'RegisterController',
@@ -47,12 +45,12 @@
             })
 
             .state('login.manage', {
-                url:'/',                
+                params:{username:null,authdata:null},
                 onEnter: ['$stateParams', '$state', '$modal', function($stateParams, $state, $modal) {
-                    $modal.open({
-                        controller: 'ManageController',
+                    $modal.open({                        
                         templateUrl: 'login/manage.view.html',
-                        params:['userid'],
+                        params:{username:null,authdata:null},
+                        controller: 'ManageController',
                         backdrop: 'static'          
                     }).result.finally(function(data) {
                         $state.go('^');
