@@ -5,21 +5,25 @@
         .module('app')
         .controller('ManageController', ManageController);
 
-    ManageController.$inject = ['$state','$scope'];
-    function ManageController($state,$scope, AuthenticationService, FlashService) {
+    ManageController.$inject = ['$state','$scope', 'UserService', 'FlashService'];
+    function ManageController($state,$scope, UserService, FlashService) {
 
-        $scope.manageApartment = function() {
-            $scope.dataLoading = true;
-            AuthenticationService.Login($scope.username, $scope.password, function (response) {
-                if (response.success) {
-                    AuthenticationService.SetCredentials($scope.username, $scope.password);
-                    $state.go('/');
-                } else {
-                    FlashService.Error(response.message);
-                    $scope.dataLoading = false;
-                }
-            });
+        var getapartemnts = function() {
+            UserService.GetAvailableApartmentsForUser('ejaz','').then(function(apartments){
+                $scope.AvailableApartments = apartments;
+            })
         };
+
+        getapartemnts();
+
+
+        var getFlats = function() {
+            UserService.GetAvailableFlatsForUser('ejaz','').then(function(flats){
+                $scope.AvailableFlats = flats;
+            })
+        };
+
+        getFlats();
 
         $scope.manafeFlat = function(){
             $state.go('/');

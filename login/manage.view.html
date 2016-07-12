@@ -8,11 +8,27 @@
 
         <div id="Apartment" class="collapse">
         Apartment
+        <div class="form-group">
+            <label for="apartmentName">Apartment Name</label>
+            <select name="apartmentName" id="apartmentName" class="form-control" ng-model="user.apartmentId">
+                 <option ng-repeat="apartment in AvailableApartments" value="{{apartment.Id}}">{{apartment.Name}}</option>
+            </select>
+              <button>Dummy</button>
+        </div>
+
+
         </div>
 
 
         <div id="Flat" class="collapse">
         Flat
+        <div class="form-group">
+            <label for="flatName">Apartment Name</label>
+            <select name="flatName" id="flatName" class="form-control" ng-model="user.flatNameId">
+                 <option ng-repeat="flat in AvailableFlats" value="{{flat.Id}}">{{flat.Name}}</option>
+            </select>
+            <button type="submit">Dummy</button>
+        </div>
         </div>
         
     </form>

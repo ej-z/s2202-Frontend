@@ -18,6 +18,8 @@
         service.Delete = Delete;
         service.GetAllAvailableApartments = GetAllAvailableApartments;
         service.GetFlatsForApartment = GetFlatsForApartment;
+        service.GetAvailableApartmentsForUser = GetAvailableApartmentsForUser;
+        service.GetAvailableFlatsForUser = GetAvailableFlatsForUser;
 
         return service;
 
@@ -125,8 +127,29 @@
             return $http.get('/data/Flats.json').then(handleSuccess, handleError('Error getting all apartments'));
         }
 
-        function GetAvailableApartmentsForUser(userId, searchPhrase) {
-        return [{Name:"Apartment1"},{Name:"Apartment2"},{Name:"Apartment3"}];
+        function GetAvailableApartmentsForUser(username, searchPhrase) {
+            var deferred = $q.defer();
+            GetByUsername(username).then(function(user){
+                GetAllAvailableApartments('').then(function(apartments){
+                var filtered = $filter('filter')(apartments, function(listItem){
+                        return user.apartments.indexOf(listItem.Id) != -1;
+                    });
+                    deferred.resolve(filtered);  
+                });
+            });
+            return deferred.promise;
+        }
+         function GetAvailableFlatsForUser(username, searchPhrase) {
+            var deferred = $q.defer();
+            GetByUsername(username).then(function(user){
+                GetAllAvailableFlats('').then(function(flats){
+                var filtered = $filter('filter')(flats, function(listItem){
+                        return user.flats.indexOf(listItem.Id) != -1;
+                    });
+                    deferred.resolve(filtered);  
+                });
+            });
+            return deferred.promise;
         }
 
         function GetFlatsForApartment(ApartmentId, searchPhrase) {
